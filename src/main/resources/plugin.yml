@@ -1,0 +1,4 @@
+name: messagebroadcast
+author: Buchstabet
+version: 1.0
+main: dev.buchstabet.messagebroadcast.MessageBroadcast
