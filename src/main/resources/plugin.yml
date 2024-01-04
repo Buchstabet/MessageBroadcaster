@@ -2,3 +2,13 @@ name: messagebroadcast
 author: Buchstabet
 version: 1.0
 main: dev.buchstabet.messagebroadcast.MessageBroadcast
+api-version: 1.20
+
+commands:
+  messagebroadcast:
+    aliases:
+      - automsg
+      - broadcasts
+      - msgbroadcast
+      - msgbr
+    permission: messagebroadcast.command.messagebroadcast

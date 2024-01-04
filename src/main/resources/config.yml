@@ -1,0 +1,7 @@
+database:
+  hostname:
+  port: 3306
+  database:
+  username:
+  password:
+tick_interval: 6000

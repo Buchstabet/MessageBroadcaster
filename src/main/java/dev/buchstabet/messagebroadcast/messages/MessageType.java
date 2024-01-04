@@ -4,7 +4,6 @@ public enum MessageType
 {
 
   CHAT,
-  TITLE,
   BOSS_BAR
 
 }
