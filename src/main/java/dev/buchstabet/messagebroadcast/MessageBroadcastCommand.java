@@ -83,7 +83,12 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
           stringBuilder.append(args[i]).append(" ");
         }
 
-        Message message = new Message(UUID.randomUUID(), messages.size(), stringBuilder.toString(),
+        String string = stringBuilder.toString();
+
+        if (checkTextLength(sender, string))
+          return true;
+
+        Message message = new Message(UUID.randomUUID(), messages.size(), string,
             sender.getName(), permission, System.currentTimeMillis());
         messages.addNewMessage(message).whenComplete((unused, throwable) -> {
           if (throwable != null) {
@@ -103,8 +108,11 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
           stringBuilder.append(args[i]).append(" ");
         }
 
+        String string = stringBuilder.toString();
+        if (checkTextLength(sender, string))
+          return true;
+
         messages.find(uuid).ifPresent(message -> {
-          String string = stringBuilder.toString();
           if (message.getContent().equals(string)) {
             sender.sendMessage("§eEs wurde keine Änderung festgestellt.");
             return;
@@ -134,6 +142,15 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
           "§bFarbcodes können, mit '&' eingeleitet, verwendet werden. Die neuen Hex Codes werden supportet z.B. '&#FF99CF'");
     }
 
+    return false;
+  }
+
+  private static boolean checkTextLength(@NotNull CommandSender sender, String string)
+  {
+    if (string.length() > 1000) {
+      sender.sendMessage("§4§oDein Text hat die maximale Länge von 1000 Zeichen überschritten.");
+      return true;
+    }
     return false;
   }
 
