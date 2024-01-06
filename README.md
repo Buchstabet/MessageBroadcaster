@@ -25,6 +25,7 @@ PRIMARY KEY (`uuid`)
 ## Message Broadcasts verwalten
 
 Message Broadcasts können über den ``/messagebroadcast`` Befehl verwaltet werden.
+``/messagebroadcast`` setzt folgende Permission voraus: `messagebroadcast.command.messagebroadcast`
 
 <br>
 
