@@ -17,7 +17,6 @@ public class Message
   @Setter private String content;
   private final String author, permission;
   private final long createdAt;
-  private final MessageType type;
 
   public String getStyledContent()
   {

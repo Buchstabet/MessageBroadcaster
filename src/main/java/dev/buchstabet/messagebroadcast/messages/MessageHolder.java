@@ -41,11 +41,9 @@ public class MessageHolder extends ArrayList<Message>
           String content = resultSet.getString("content");
           String author = resultSet.getString("author");
           long createdAt = (long) resultSet.getFloat("createdAt");
-          MessageType messageType = MessageType.valueOf(resultSet.getString("type"));
           String permission = resultSet.getString("permission");
 
-          Message message = new Message(uuid, sortId, content, author, permission, createdAt,
-              messageType);
+          Message message = new Message(uuid, sortId, content, author, permission, createdAt);
           messages.add(message);
         }
       } catch (SQLException e) {
@@ -61,14 +59,13 @@ public class MessageHolder extends ArrayList<Message>
     return CompletableFuture.runAsync(() -> {
       HikariDataSource dataSource = MessageBroadcast.getInstance().get(HikariDataSource.class);
       try (Connection connection = dataSource.getConnection(); PreparedStatement stm = connection.prepareStatement(
-          "INSERT INTO message_broadcast (uuid, sortId, content, author, createdAt, type, permission) VALUES (?,?,?,?,?,?,?);")) {
+          "INSERT INTO message_broadcast (uuid, sortId, content, author, createdAt, permission) VALUES (?,?,?,?,?,?);")) {
         stm.setString(1, message.getUuid().toString());
         stm.setInt(2, message.getSortId());
         stm.setString(3, message.getContent());
         stm.setString(4, message.getAuthor());
         stm.setFloat(5, message.getCreatedAt());
-        stm.setString(6, message.getType().name());
-        stm.setString(7, message.getPermission());
+        stm.setString(6, message.getPermission());
         stm.execute();
 
         add(message);

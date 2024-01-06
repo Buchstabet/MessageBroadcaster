@@ -3,9 +3,7 @@ package dev.buchstabet.messagebroadcast;
 import dev.buchstabet.messagebroadcast.inventory.SortInventory;
 import dev.buchstabet.messagebroadcast.messages.Message;
 import dev.buchstabet.messagebroadcast.messages.MessageHolder;
-import dev.buchstabet.messagebroadcast.messages.MessageType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.command.Command;
@@ -34,13 +32,9 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
       strings.add("sort");
     }
 
-    if (args.length == 2) {
-      if (args[0].equals("add"))
-        Arrays.stream(MessageType.values()).map(Enum::name).forEach(strings::add);
-      else if (args[0].equals("delete"))
-        MessageBroadcast.getInstance().get(MessageHolder.class).stream()
-            .map(Message::getUuid).map(UUID::toString).forEach(strings::add);
-    }
+    if (args.length == 2 && (args[0].equals("delete") || args[0].equals("edit")))
+      MessageBroadcast.getInstance().get(MessageHolder.class).stream().map(Message::getUuid)
+          .map(UUID::toString).forEach(strings::add);
     return strings;
   }
 
@@ -61,9 +55,9 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
             sender.sendMessage("§UUID: " + message.getUuid());
             sender.sendMessage("Author: " + message.getAuthor());
             sender.sendMessage("Permission: " + message.getPermission());
-            sender.sendMessage("Type: " + message.getType().name());
             sender.sendMessage("SortId: " + message.getSortId());
-            sender.sendMessage("Timestamp: " + MessageBroadcast.SIMPLE_DATE_FORMAT.format(message.getCreatedAt()));
+            sender.sendMessage(
+                "Timestamp: " + MessageBroadcast.SIMPLE_DATE_FORMAT.format(message.getCreatedAt()));
             sender.sendMessage("\n" + message.getStyledContent() + "\n");
           });
         }
@@ -80,27 +74,17 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
 
               sender.sendMessage("§aDie Message wurde gelöscht.");
             }));
-      } else if (args[0].equals("add") && args.length >= 4) {
-        if (sender instanceof Player) {
-          sender.sendMessage(
-              "§4§oEs wird empfohlen diesen Befehl in der Konsole zu verwenden. In der Konsole können länger Nachrichten eingegeben werden.");
-        }
+      } else if (args[0].equals("add") && args.length >= 3) {
+        sendUseConsole(sender);
 
-        MessageType messageType;
-        try {
-          messageType = MessageType.valueOf(args[1]);
-        } catch (IllegalArgumentException e) {
-          sender.sendMessage("Error: " + e.getMessage());
-          return true;
-        }
-        String permission = args[2];
+        String permission = args[1];
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 3; i < args.length; i++) {
+        for (int i = 2; i < args.length; i++) {
           stringBuilder.append(args[i]).append(" ");
         }
 
         Message message = new Message(UUID.randomUUID(), messages.size(), stringBuilder.toString(),
-            sender.getName(), permission, System.currentTimeMillis(), messageType);
+            sender.getName(), permission, System.currentTimeMillis());
         messages.addNewMessage(message).whenComplete((unused, throwable) -> {
           if (throwable != null) {
             throwable.printStackTrace();
@@ -111,10 +95,7 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
           sender.sendMessage("§aDie Nachricht wurde erstellt.");
         });
       } else if (args[0].equals("edit") && args.length >= 3) {
-        if (sender instanceof Player) {
-          sender.sendMessage(
-              "§4§oEs wird empfohlen diesen Befehl in der Konsole zu verwenden. In der Konsole können länger Nachrichten eingegeben werden.");
-        }
+        sendUseConsole(sender);
 
         String uuid = args[1];
         StringBuilder stringBuilder = new StringBuilder();
@@ -143,7 +124,7 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
       }
 
     } else {
-      sender.sendMessage("§e/" + label + " add <type (CHAT,BOSS_BAR)> <permission> <content>");
+      sender.sendMessage("§e/" + label + " add <permission> <content>");
       sender.sendMessage("§e/" + label + " edit <uuid> <content>");
       sender.sendMessage("§e/" + label + " delete <uuid>");
       sender.sendMessage("§e/" + label + " list");
@@ -154,6 +135,14 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
     }
 
     return false;
+  }
+
+  private static void sendUseConsole(@NotNull CommandSender sender)
+  {
+    if (sender instanceof Player) {
+      sender.sendMessage(
+          "§4§oEs wird empfohlen diesen Befehl in der Konsole zu verwenden. In der Konsole können länger Nachrichten eingegeben werden.");
+    }
   }
 
 }
