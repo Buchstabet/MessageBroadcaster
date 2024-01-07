@@ -30,7 +30,7 @@ public class SortInventory implements Listener
       ItemStack itemStack = new ItemBuilder(Material.PAPER).setDisplayname(
           message.getUuid().toString()).setLore("Autor: " + message.getAuthor(),
           "Timestamp: " + MessageBroadcast.SIMPLE_DATE_FORMAT.format(message.getCreatedAt()), " ",
-          message.getStyledContent()).build();
+          message.getContent()).build();
       inventory.setItem(message.getSortId(), itemStack);
     }
 

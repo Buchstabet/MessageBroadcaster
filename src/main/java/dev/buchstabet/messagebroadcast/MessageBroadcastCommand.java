@@ -48,18 +48,24 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
         if (messages.isEmpty()) {
           sender.sendMessage("§cEs existiert keine Broadcast-Nachricht.");
         } else {
-          sender.sendMessage(
-              "§eHier eine Liste der geladenen Nachrichten (Anzahl: " + messages.size() + "):");
+          final boolean[] first = {true};
           messages.forEach(message -> {
-            sender.sendMessage("§8§m-------------------------------------------");
-            sender.sendMessage("§UUID: " + message.getUuid());
-            sender.sendMessage("Author: " + message.getAuthor());
-            sender.sendMessage("Permission: " + message.getPermission());
-            sender.sendMessage("SortId: " + message.getSortId());
+            if (first[0]) {
+              sender.sendMessage("§8§m-------------------------------------------");
+              first[0] = false;
+            }
+
+            sender.sendMessage("§7UUID§8: §e" + message.getUuid());
+            sender.sendMessage("§7Author§8: §e" + message.getAuthor());
+            sender.sendMessage("§7Permission§8: §e" + message.getPermission());
+            sender.sendMessage("§7SortId§8: §e" + message.getSortId());
             sender.sendMessage(
-                "Timestamp: " + MessageBroadcast.SIMPLE_DATE_FORMAT.format(message.getCreatedAt()));
+                "§7Timestamp§8: §e" + MessageBroadcast.SIMPLE_DATE_FORMAT.format(message.getCreatedAt()));
             sender.sendMessage("\n" + message.getStyledContent() + "\n");
+            sender.sendMessage("§8§m-------------------------------------------");
           });
+          sender.sendMessage(
+              "§eEs wurden " + messages.size() + " Nachrichten geladen.");
         }
       } else if (args[0].equals("sort") && sender instanceof Player player) {
         SortInventory.open(player, messages);
@@ -139,7 +145,7 @@ public class MessageBroadcastCommand implements CommandExecutor, TabExecutor
       if (sender instanceof Player)
         sender.sendMessage("§e/" + label + " sort");
       sender.sendMessage(
-          "§bFarbcodes können, mit '&' eingeleitet, verwendet werden. Die neuen Hex Codes werden supportet z.B. '&#FF99CF'");
+          "§bFarbcodes können, mit '&' eingeleitet, verwendet werden. Die neuen Hex Codes werden supportet z.B. '&#FF99CF'. Einen Zeilenumbruch kann durch '%n' gesetzt werden.");
     }
 
     return false;

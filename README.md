@@ -67,3 +67,8 @@ Es wird empfohlen den `add` und `edit` Befehl für komplexe Nachrichten in der K
 da hier keine Begrenzung der Eingabelänge besteht.
 
 Die maximale Textlänge ist 1000 Zeichen.
+
+## Farbcodes und Zeilenumbrüche
+
+Farbcodes können, mit `&` eingeleitet, verwendet werden. Die neuen Hex Codes werden supportet
+z.B. `&#FF99CF`. Einen Zeilenumbruch kann durch `%n` gesetzt werden.
