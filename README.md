@@ -2,7 +2,7 @@
 
 Message Broadcast sendet in einem einstellbaren Intervall eine Nachricht an alle, die die
 erforderlichen Berechtigungen haben. Die Nachrichten werden in einer Datenbank gespeichert und beim
-Start synchronisiert.
+Start und in einem einstellbaren Takt synchronisiert.
 
 ## Datenbank einrichten
 
