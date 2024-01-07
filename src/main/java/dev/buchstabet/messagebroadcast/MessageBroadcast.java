@@ -86,8 +86,12 @@ public class MessageBroadcast extends JavaPlugin
       command.setTabCompleter(broadcastCommand);
 
       int tickInterval = getConfig().getInt("tick_interval");
-      Bukkit.getScheduler().runTaskTimer(this, new Broadcaster(holder), tickInterval, tickInterval);
+      int updateInterval = getConfig().getInt("update_interval");
+
+      Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Broadcaster(holder), tickInterval, tickInterval);
+      Bukkit.getScheduler().runTaskTimerAsynchronously(this, new MessageUpdateTask(holder), updateInterval, updateInterval);
     });
+
   }
 
   @SneakyThrows

@@ -5,3 +5,4 @@ database:
   username:
   password:
 tick_interval: 6000
+update_interval: 24000
